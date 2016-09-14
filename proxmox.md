@@ -33,6 +33,7 @@ And add the following at the end of the file:
 ```
 args: -machine pc-q35-2.4 -smbios type=2 -device isa-applesmc,osk="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc" -kernel /opt/enoch_rev2839_boot -usb -device usb-kbd -device usb-mouse -readconfig /opt/pve-osx.cfg -device ide-drive,bus=ide.2,drive=MacDVD -drive id=MacDVD,if=none,snapshot=on,file=/var/lib/vz/template/iso/Install_OS_X_10.11.6_El_Capitan.iso
 ```
+Set the network interface to _net0: e1000-82545em=..._
 
 * Then start the machine as usual and hit return in the console window.
 
@@ -63,3 +64,4 @@ args: -machine pc-q35-2.4 -smbios type=2 -device isa-applesmc,osk="ourhardworkby
 ### References
 
 * http://blog.will3942.com/virtualizing-osx-yosemite-proxmox
+* https://github.com/timsutton
