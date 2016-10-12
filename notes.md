@@ -1,3 +1,19 @@
+### App Store problems
+
+Do you see the "Your device or computer could not be verified" message when you
+try to login to the App Store? If yes, here are the steps to fix it.
+
+* Make sure that your wired ethernet connection is called "en0" (and not "en1" or
+something else). Use "ifconfig" command to verify this.
+
+* If the wired ethernet connection is not called "en0", then then go to Network
+in System Preferences and delete all the devices, and apply the changes. Next,
+delete /Library/Preferences/SystemConfiguration/NetworkInterfaces.plist file.
+Finally reboot, and then use the App Store without problems.
+
+This fix was found by Glnk2012 of https://www.tonymacx86.com/ site.
+
+
 ### Enoch Bootloader
 
 * Download Enoch bootloader from http://www.insanelymac.com/forum/ (requires
@@ -39,9 +55,11 @@ Type the following after boot,
 * After extracting the Kernels folder, place it in the same directory as the
   ISO creation script.
 
+
 ### Post Installation
 
 Put "org.chameleon.boot.plist" in /Extra folder.
+
 
 ### Installer Details (InstallESD.dmg)
 

@@ -2,28 +2,44 @@
 
 Ubuntu 15.10 running on i5-6500 CPU.
 
-Fedora 24 running on i5-6500 CPU.
+Fedora 24 running on i5-6500 + i7-6600U CPU.
 
 Tested with QEMU 2.4.1 and QEMU 2.5.
+
+AMD CPU(s) are known to be problematic. AMD FX-8350 works but Phenom II X3 720
+does not.
+
+Intel VT-x / AMD SVM is required.
 
 ### ISO Creation
 
 * Download OS X El Capitan or macOS Sierra installer from Apple App Store.
 
-* Run the ISO creation script, making sure to use 'sudo'.
+* Run the ISO creation script `create_install_iso.sh` included in this
+  repository, making sure to use 'sudo'.
 
-* Copy the ISO from your Mac to your KVM machine.
+  This script supports specifying the path to OS X / macOS installation
+  application manually via the `-a` option.
+
+* Copy the ISO from your Mac to your QEMU/KVM machine.
 
 ### Installation
 
-See `boot.sh` file for an alternate to the following virsh method.
+See `boot.sh` / `boot-macOS.sh` file for a more solid alternate to the
+following virsh method.
 
-```bash
-virsh --connect qemu:///system define macOS-libvirt.xml
+* Create a virtual HDD image where the operating system will be installed.
+  ```bash
+   qemu-img create -f qcow2 mac_hdd.img 64G
+  ```
 
-```
+* Edit `macOS-libvirt.xml` file and change file paths for `mac_hdd.qcow2` (HDD), `Install_OS_X_10.11_El_Capitan.iso` (bootable ISO image) and `enoch_rev2839_boot` suitably.
 
-* Redefine HDD/DVD sources in virt-manager.
+* Create a VM by running the following command
+  ```bash
+  virsh --connect qemu:///system define macOS-libvirt.xml
+
+  ```
 
 * Start the VM in virt-manager and hit return in the console window.
 
@@ -53,20 +69,42 @@ virsh --connect qemu:///system define macOS-libvirt.xml
 
 ### Debugging
 
-Host machine may need the following tweak for this to work,
+* For macOS Sierra change the CPU model from `core2duo` to `Penryn`. The
+  `boot-macOS.sh` script already has this change.
 
-```
-echo 1 > /sys/module/kvm/parameters/ignore_msrs
-```
+* While booting from the macOS Sierra ISO installer, you might get stuck on the
+  "Language Chooser" menu bar (with no option to launch Disk Utility). The
+  solution is to wait for a few seconds on the "Language Chooser" screen itself
+  without pressing the forward button.
 
-Type the following in the bootloader if the guest VM fails to boot (some older
-ISO images may require this),
+* Host machine may need the following tweak for this to work,
 
-```
-"KernelBooter_kexts"="Yes" "CsrActiveConfig"="103"
-```
+  ```
+  echo 1 > /sys/module/kvm/parameters/ignore_msrs
+  ```
+
+* Type the following in the bootloader if the guest VM fails to boot (some
+  older ISO images may require this),
+
+  ```
+  "KernelBooter_kexts"="Yes" "CsrActiveConfig"="103"
+  ```
+
+* If you see "hdiutil: attach failed - Resource busy" error message during the
+  ISO creation step, quit the "Install macOS Sierra" program and unmount
+  (eject) the "Install macOS Sierra" device. Disk Utility can help for
+  unmouting disk images.
+
+  ```
+  $ hdiutil info
+  $ hdiutil detach /dev/disk2  # or something similar
+  ```
 
 ### Credits
+
+* PJ Meyer (pjmeyer) - compatibility with modern versions of GNU mktemp
+
+* Robert DeRose (RobertDeRose) and Dirk Bajohr (isolution-de) - macOS support
 
 * Fritz Elfert (felfert) - cleanups, better documentation, and nicer ISO creation script
 
@@ -74,12 +112,16 @@ ISO images may require this),
 
 * voobscout - libvirt XML file
 
+* Evgeny Grin (Karlson2k) - for the original ISO creation script
+
+* Gabriel L. Somlo - for getting things started
+
+* http://www.insanelymac.com/ - Enoch bootloader
+
 ### References
 
 * https://github.com/Karlson2k/k2k-OSX-Tools
 
-* https://macosxvirtualmachinekvm.wordpress.com/guide-mac-os-x-10-11-el-capitan-vm-on-unraid/
+* [Mac OS X 10.11 El Capitan – VM on unRAID](https://macosxvirtualmachinekvm.wordpress.com/guide-mac-os-x-10-11-el-capitan-vm-on-unraid/)
 
 * http://www.contrib.andrew.cmu.edu/~somlo/OSXKVM/
-
-* http://bit.do/bootable

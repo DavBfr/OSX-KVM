@@ -16,7 +16,7 @@
     </kvm>
   </features>
   <cpu mode='custom' match='exact'>
-    <model fallback='allow'>core2duo</model>
+    <model fallback='allow'>Penryn</model>
   </cpu>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
@@ -26,13 +26,6 @@
       <target dev='sda' bus='sata'/>
       <boot order='1'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
-    </disk>
-    <disk type='file' device='cdrom'>
-      <driver name='qemu' type='raw'/>
-      <target dev='sdb' bus='sata'/>
-      <readonly/>
-      <boot order='2'/>
-      <address type='drive' controller='0' bus='0' target='0' unit='1'/>
     </disk>
     <interface type='network'>
       <source network='default'/>
@@ -57,5 +50,11 @@
     <qemu:arg value='type=2'/>
     <qemu:arg value='-k'/>
     <qemu:arg value='en-us'/>
+    <qemu:arg value='-cpu'/>
+    <qemu:arg value='Penryn,vendor=GenuineIntel'/>
+    <qemu:arg value='-device'/>
+    <qemu:arg value='ide-drive,bus=ide.1,drive=MacDVD'/>
+    <qemu:arg value='-drive'/>
+    <qemu:arg value='id=MacDVD,if=none,snapshot=on,file=/opt/macOS/Install_OS_X_10.11_El_Capitan.iso'/>
   </qemu:commandline>
 </domain>
